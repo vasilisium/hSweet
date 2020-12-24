@@ -1,0 +1,8 @@
+.mainWrapper{
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    position: relative;
+    overflow: hidden;
+    bottom: 0;
+}

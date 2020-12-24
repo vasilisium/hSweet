@@ -1,0 +1,7 @@
+.border_bottom {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid 1px;
+    margin-left: 9px;
+}

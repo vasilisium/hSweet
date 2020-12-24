@@ -1,0 +1,56 @@
+.linkSensor:hover {
+    text-decoration: none;
+    color: inherit;
+}
+.sensorsGrid{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .sensorsGrid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .sensorsGrid{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .sensorsGrid{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.labelWithIcon {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 5px;
+    height: 100%;
+}
+.labelWithIcon svg{
+    margin: auto 0;
+}
+
+.labelWithIcon label {
+    margin: auto;
+}
+
+.listHeader{
+    position: relative;
+}
+.asd {
+    position: absolute;
+    right: 0;
+    top:0;
+    bottom: 0;
+
+    /* height: 100%; */
+    display: flex;
+}

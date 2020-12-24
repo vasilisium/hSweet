@@ -1,0 +1,24 @@
+.wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 200px;
+    min-width: 300px;
+}
+
+.form {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.formBody {
+    display: grid;
+    grid-template-rows: auto minmax(100px, auto) 1fr;
+    grid-row-gap: 10px;
+}
+.formFooter{
+    display: grid;
+    grid-template-columns: 1fr minmax(90px, auto) minmax(90px, auto);
+    grid-gap: 10px;
+}

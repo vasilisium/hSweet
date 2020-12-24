@@ -1,0 +1,28 @@
+.wrapper{
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.labelWithIcon {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+.labelWithIcon svg{
+    margin: auto 0;
+}
+
+.labelWithIcon label {
+    margin: auto;
+}
+
+.listItem label{
+    font-weight: 300;
+    transition: font-weight ease-in .06s;
+    margin: auto 0 auto 3px;
+}
+
+.listItem:hover label{
+    /* transform: translateX(calc(2.5% - 5px)) scale(1.05); */
+    font-weight: 700;
+}

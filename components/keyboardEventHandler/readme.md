@@ -1,0 +1,1 @@
+Copied from [react-keyboard-event-handler](https://www.npmjs.com/package/react-keyboard-event-handler)
