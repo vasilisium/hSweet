@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+// import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
 import { useBinaryState } from 'hooks/useBinaryState'
@@ -35,7 +35,7 @@ const SideHider = (props) => {
                 onClick={ toggle }
             >
                 <div className={ styles.icon } >
-                    <FontAwesomeIcon icon={faAngleRight} />
+                    <ChevronRightIcon/>
                 </div>
             </div>
             {isShowing &&

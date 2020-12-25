@@ -2,11 +2,11 @@ import GroupsList from "components/groups/groupsList";
 
 const Groups = (props) => {
 
-    return (
-        <>
-            <GroupsList/>
-        </>
-    )
+  return (
+    <>
+      <GroupsList />
+    </>
+  )
 }
 
 export default Groups;

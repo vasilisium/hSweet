@@ -1,6 +1,5 @@
 import { createPortal } from 'react-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import CloseSharpIcon from '@material-ui/icons/CloseSharp';
 
 // import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
 
@@ -25,7 +24,7 @@ export const Modal = (props) => {
               {header}
             </h6>
             <div className={`${styles.btn} btn-outline-danger btn-sm`} onClick={closeModal}>
-              <FontAwesomeIcon icon={faTimes}/>
+              <CloseSharpIcon/>
             </div>
           </div>
           <div className={styles.content}>

@@ -1,6 +1,5 @@
-// import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import ChevronRightSharpIcon from '@material-ui/icons/ChevronRightSharp';
+import KeyboardArrowDownSharpIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 import styles  from './groupsList.module.css';
 
@@ -13,7 +12,7 @@ const GroupListItem = (props) => {
             className={`mx-3 my-1 ${styles.labelWithIcon} ${styles.listItem}${selected?' '+styles['selected']:''}`} 
             onClick={()=>onSelect(obj)}
         >
-            <FontAwesomeIcon icon={selected ? faFolderOpen: faFolder}/>
+            {selected ? <KeyboardArrowDownSharpIcon/> : <ChevronRightSharpIcon/>}
             <label className={selected && 'font-weight-bold'}>{name}</label>
         </div>
     )

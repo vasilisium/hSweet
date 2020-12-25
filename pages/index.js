@@ -11,9 +11,9 @@ const Home = (props) => {
     return (
         <div className={ styles.mainWrapper }>
             <aside>
-                <SideHider>
+                {/* <SideHider>
                     <GroupsList/>
-                </SideHider>
+                </SideHider> */}
             </aside>
             <main className='ml-2'>
                 <SensorsList/>

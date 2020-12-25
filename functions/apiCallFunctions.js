@@ -1,6 +1,6 @@
 const Cors = require('cors');
 
-const apiRootAddress = `http://127.0.0.1:3000/api/`;
+const apiRootAddress = `http://192.168.1.138:3000/api/`;
 
 const defaultGetter = param => param;
 

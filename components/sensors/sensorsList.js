@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faObjectGroup, faEdit } from '@fortawesome/free-solid-svg-icons';
+import EditSharpIcon from '@material-ui/icons/EditSharp';
 
 import { fetchSensorsList } from 'redux/sensorsList-Reducer';
 import Sensor from 'components/sensors/sensor';
@@ -25,12 +24,12 @@ const SensorsList = ({ getSensorsList, sensorsSate, selectedGroup }) => {
     <div>
       <div className={styles.listHeader}>
         <div className={`my-1 ${styles.labelWithIcon}`}>
-          <FontAwesomeIcon icon={faObjectGroup} size="2x" />
+          <img src='object-group-regular.svg'/>
           <label><h6> {selectedGroup?.name || '(not selected)'} </h6></label>
         </div>
 
         <div className={`btn btn-outline-secondary ${styles.asd}`}>
-            <FontAwesomeIcon icon={faEdit} />
+            <EditSharpIcon/>
         </div>
       </div>
 

@@ -1,18 +1,23 @@
 import Link from 'next/link';
 
-const NavLink = (props) => {
-    const { isActive, label, rout } = props;
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography'
 
-    return (
-        <li className={`nav-item${ isActive && ' active'}`}>
-            <Link href={rout}>
-                <a className="nav-link" onClick={(e)=>{e.target.blur()}}> 
-                    { label }
-                    { isActive && <span className="sr-only">(current)</span> }
-                </a>
-            </Link>
-        </li>
-    )
+const NavLink = (props) => {
+  const { isActive, label, rout, onClick } = props;
+
+  return (
+    <Link href={rout}>
+      <Button className={`${isActive && ' active'}`} color="inherit" 
+      // onClick={onClick}
+      >
+        {/* <a className="nav-link" onClick={(e)=>{e.target.blur()}}>  */}
+        {label}
+        {isActive && <Typography variant="srOnly">(current)</Typography>}
+        {/* </a> */}
+      </Button>
+    </Link>
+  )
 }
 
 export default NavLink;

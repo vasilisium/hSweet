@@ -73,7 +73,7 @@
     }
 
     .iconWrapper{
-        background-color: black;
+        /* background-color: black; */
         height: 100%;
         /* border-right: 1px solid; */
         width: 10px;
@@ -98,7 +98,7 @@
 
 
 .iconWrapper{
-    background-color: black;
+    /* background-color: black; */
     height: 100%;
     border-right: 1px solid;
     width: 10px;
@@ -128,7 +128,7 @@
 }
 
 .contentContainer{
-    background-color: black;
+    /* background-color: black; */
     width: var(--side-width);
     height: 100%;
     /* display: grid; */

@@ -1,34 +1,23 @@
-import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
+import Button from '@material-ui/core/Button';
+
+import { useBinaryState } from 'hooks/useBinaryState';
+import SideDrawer from 'components/sideDrawer/sideDrawer';
 
 const About = () => {
-    function debounce(func, wait) {
-        let timeout;
-      
-        return function executedFunction() {
-          const context = this;
-          const args = arguments;
-      
-          const later = function() {
-            timeout = null;
-            func.apply(context, args);
-          };
-      
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-    };
-    
 
-    return (
+  const { isShowing, toggle, show, hide } = useBinaryState()
+
+  return (
+    <>
+      <Button>Open</Button>
+      <SideDrawer isOpen={isShowing} closeHandler={hide}>
         <div>
-            <KeyboardEventHandler handleKeys={['all']} onKeyEvent={debounce((...args)=>{console.log(args)}, 1000)} />
-            {/* <KeyboardEventHandler handleKeys={['esc']} onKeyEvent={handlerEsc} /> */}
-
-            <div>
-                {/* {divText} */}
-            </div>
+          drawer content
         </div>
-    )
+      </SideDrawer>
+    </>
+  );
+
 }
 
 export default About;
