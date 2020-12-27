@@ -1,9 +1,8 @@
 .wrapper{
     height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    /* display: gr 1fr auto; */
 }
-
+/* 
 .labelWithIcon {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -23,6 +22,12 @@
 }
 
 .listItem:hover label{
-    /* transform: translateX(calc(2.5% - 5px)) scale(1.05); */
+    transform: translateX(calc(2.5% - 5px)) scale(1.05);
     font-weight: 700;
+} */
+
+.innerContainer{
+    display: grid;
+    grid-template-rows: 1fr auto;
+    height: 100%;
 }

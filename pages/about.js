@@ -3,17 +3,33 @@ import Button from '@material-ui/core/Button';
 import { useBinaryState } from 'hooks/useBinaryState';
 import SideDrawer from 'components/sideDrawer/sideDrawer';
 
-const About = () => {
+import { SideLinksList } from 'components/layouts/LinksList'
+
+const linksList = [
+  {
+    label: 'Home',
+    rout: '/'
+  },
+  {
+    label: 'Groups',
+    rout: '/groups'
+  },
+  {
+    label: 'About',
+    rout: '/about'
+  },
+]
+
+const About = (props) => {
+  const { currentRout } = props;
 
   const { isShowing, toggle, show, hide } = useBinaryState()
 
   return (
     <>
-      <Button>Open</Button>
+      <Button onClick={show}>Open</Button>
       <SideDrawer isOpen={isShowing} closeHandler={hide}>
-        <div>
-          drawer content
-        </div>
+        <SideLinksList linksList={linksList} currentRout={currentRout}/>
       </SideDrawer>
     </>
   );

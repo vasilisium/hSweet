@@ -4,7 +4,7 @@ const Groups = (props) => {
 
   return (
     <>
-      <GroupsList />
+      <GroupsList showOptions={true}/>
     </>
   )
 }

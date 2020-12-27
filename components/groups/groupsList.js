@@ -1,40 +1,65 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 
-// import Asd from '@material-ui/icons/'
-import AddBoxSharpIcon from '@material-ui/icons/AddBoxSharp';
+// import { makeStyles } from '@material-ui/core/styles';
+
+import List from '@material-ui/core/List';
+// import Zoom from '@material-ui/core/Zoom';
+// import Fab from '@material-ui/core/Fab';
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import BuildIcon from '@material-ui/icons/Build';
 
 import { fetchGroupsList, selectGroup_Action } from "redux/groups-Reducer";
 import Spinner from 'components/spinner';
 import GroupListItem from 'components/groups/groupListItem';
+import { IMenuItem } from './menuItem';
+import { Options } from './options'
+
+// import { useBinaryState } from 'hooks/useBinaryState';
+// import CreateGroup from 'components/createGroup/createGroup';
+import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
+import { useContxtMenu } from 'hooks/useContxtMenu';
+// import GroupIcon from './groupIcon';
 
 import styles from './groupsList.module.css';
-import { Modal } from 'components/modal/Modal';
-import { useBinaryState } from 'hooks/useBinaryState';
-import CreateGroup from 'components/createGroup/createGroup';
-import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
+
+// const useStyles = makeStyles((theme) => ({
+  
+// }));
+
+const commonItems = [
+  {
+    icon: <AddIcon />,
+    label: 'New'
+  }
+]
+const objectiveItems = [
+  {
+    icon: <EditIcon />,
+    label: 'Rename'
+  },
+  {
+    icon: <BuildIcon />,
+    label: 'Modify'
+  }
+]
 
 const GroupsList = (props) => {
+  // const classes = useStyles();
 
-  const { isShowing, show, hide } = useBinaryState();
-
-  const { selectGroup, getGroupsList, groupsSate } = props;
+  const { selectGroup, getGroupsList, groupsSate, showOptions } = props;
   const { loading, error, groupsList, initiated, selectedId } = groupsSate;
 
-  const onModalClose = (witRefresh) => {
-    hide();
-    if (witRefresh) getGroupsList();
-  }
+  const { position, onRightClick, contextMenuClose } = useContxtMenu((e,o)=>console.log(o));
 
   useEffect(() => {
     if (initiated === false) getGroupsList();
-    // else {
-    //     const wr = document.getElementsByClassName(styles.wrapper);
-    //     if(wr[0]) {
-    //         console.log(wr[0]);
-    //         wr[0].click();
-    //     }
-    // }
+    // setTimeout(() => setZoom(true), 500);
   }, [initiated])
 
   return loading ? <Spinner /> :
@@ -45,37 +70,58 @@ const GroupsList = (props) => {
             handleKeys={['insert']}
             onKeyEvent={() => show()}
           />
-          <div className={`my-2 ${styles.labelWithIcon}`}>
-            <img src='/object-group-regular.svg' />
-            <label><h6> Groups </h6></label>
+          <div className={styles.innerContainer}>
+            <List>
+              {groupsList && groupsList.map((group, i) => {
+                return <GroupListItem key={group.id}
+                  onRightClick={onRightClick}
+                  obj={group}
+                  {... (group.id === selectedId ? { selected: true } : {})}
+                  onSelect={(group) => {
+                    selectGroup(group.id)
+                  }}
+                />
+              })}
+            </List>
+            <Options delay={500}>
+              {
+                (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
+                .map((mi, index) => <IMenuItem {...mi} key={index} />)
+              }
+            </Options>
+            <Menu
+              keepMounted
+              open={position.y !== null}
+              onClose={contextMenuClose}
+              anchorReference="anchorPosition"
+              anchorPosition={
+                position.y !== null && position.x !== null
+                  ? { top: position.y, left: position.x }
+                  : undefined
+              }
+            >
+              {objectiveItems.map((mi, index) => <IMenuItem {...mi} key={index} />)}
+            </Menu> 
+            
+
+
           </div>
-          <div >
-            {groupsList && groupsList.map((group, i) => {
-              return <GroupListItem key={group.id}
-                obj={group}
-                {... (group.id === selectedId ? { selected: true } : {})}
-                onSelect={(group) => {
-                  selectGroup(group.id)
-                }}
-              />
-            })}
-          </div>
-          <div
+          {/* <div
             className={`btn btn-outline-secondary m-2 ${styles['my-btn']} ${styles.labelWithIcon}`}
             onClick={() => show()}
           >
             <AddBoxSharpIcon />
             <label>Create new group</label>
-          </div>
+          </div> */}
 
-          <Modal
+          {/* <Modal
             on={isShowing}
             header='Create new group'
             closeOnBackdropClick={false}
             onClose={onModalClose}
           >
             <CreateGroup onCancle={() => onModalClose()} onOk={() => onModalClose(true)} />
-          </Modal>
+          </Modal> */}
         </div>
       )
 }

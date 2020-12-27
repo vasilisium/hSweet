@@ -12,25 +12,26 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import withWidth from '@material-ui/core/withWidth';
 import Hidden from '@material-ui/core/Hidden'
-import Popover from '@material-ui/core/Popover';
+// import Popover from '@material-ui/core/Popover';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import IconButton from '@material-ui/core/IconButton';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import Brightness3Icon from '@material-ui/icons/Brightness3';
 
-import { withTheme } from '@material-ui/core/styles';
+import { withTheme, withStyles } from '@material-ui/core/styles';
 
-import NavLink from 'components/layouts/navLink';
 import styles from './nav.module.css';
 import { modes, actionsTypes } from 'redux/theme-Reducer'
+import { TopLinksList, SideLinksList } from './LinksList'
+import SideDrawer from 'components/sideDrawer/sideDrawer';
+import { useBinaryState } from "hooks/useBinaryState";
 
 const Nav = withTheme((props) => {
   const { currentRout } = props;
 
-  const themeMode = useSelector(state=>state.theme.mode);
+  const themeMode = useSelector(state => state.theme.mode);
   const dispatch = useDispatch()
-  // const toggleTheme = dispatch(toggle_Action)
 
   const linksList = [
     {
@@ -47,7 +48,13 @@ const Nav = withTheme((props) => {
     },
   ]
 
-  const [ isPop, setIsPop] = useState(false);
+  const { isShowing, toggle, show, hide } = useBinaryState();
+
+  const MyToolTip = withStyles({
+    tooltipPlacementLeft: {
+      margin: "0 8px",
+    },
+  })(Tooltip)
 
   return (
     <AppBar>
@@ -63,52 +70,29 @@ const Nav = withTheme((props) => {
 
         <div className={styles.links}>
           <Hidden xsDown>
-            {linksList.map((link, index) => (
-              <NavLink
-                label={link.label}
-                rout={link.rout}
-                isActive={currentRout === link.rout}
-                key={index}
-              />
-            ))}
+            <TopLinksList linksList={linksList} currentRout={currentRout} />
           </Hidden>
         </div>
 
         <div>
-          <Tooltip
-            title={ themeMode == modes.dark ? 'Toggle to light mod' :'Toggle to dark mod' }
+          <MyToolTip
+            title={themeMode == modes.dark ? 'Toggle to light mod' : 'Toggle to dark mod'}
             placement='left'
             arrow
           >
             <IconButton color="inherit"
-              onClick={()=>dispatch({type:actionsTypes.TOGGLE})}
+              onClick={() => dispatch({ type: actionsTypes.TOGGLE })}
             >
-              { themeMode == modes.dark ? <WbSunnyIcon/> : <Brightness3Icon /> }
+              {themeMode == modes.dark ? <WbSunnyIcon /> : <Brightness3Icon />}
             </IconButton>
-          </Tooltip>
+          </MyToolTip>
           <Hidden smUp>
-            <IconButton color="inherit" onClick={()=>setIsPop(true)}>
+            <IconButton color="inherit" onClick={show}>
               <MenuIcon />
             </IconButton>
-            <Popover open={isPop}
-              className={styles.pop}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 54, left: 0 }}
-              style={{borderRadius:0}}
-              onClose={()=>{setIsPop(false)}}
-            >
-              <div className={styles.popContent}>
-                {linksList.map((link, index) => (
-                  <NavLink
-                    label={link.label}
-                    rout={link.rout}
-                    isActive={currentRout === link.rout}
-                    key={index}
-                    onClick={()=>{setIsPop(false)}}
-                  />
-                ))}
-              </div>
-            </Popover>
+            <SideDrawer side='right' isOpen={isShowing} closeHandler={hide}>
+              <SideLinksList linksList={linksList} currentRout={currentRout} onClick={hide} />
+            </SideDrawer>
           </Hidden>
         </div>
 
@@ -117,7 +101,6 @@ const Nav = withTheme((props) => {
   )
 })
 
-// export default Nav
 Nav.propTypes = {
   width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
 };
