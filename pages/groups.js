@@ -1,12 +1,6 @@
-import GroupsList from "components/groups/groupsList";
+import GroupsList from 'components/groups';
+// import GroupsList from 'components/groups/groupsList';
 
-const Groups = (props) => {
-
-  return (
-    <>
-      <GroupsList showOptions={true}/>
-    </>
-  )
-}
+const Groups = () =><GroupsList showOptions/>
 
 export default Groups;

@@ -13,14 +13,16 @@ import Nav from './nav';
 import { theme, GlobalCss  } from './theme';
 import styles from './layout.module.css';
 
-const useStyles = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar,
-  globalContainer:{
-    height:'100%',
-    display: 'grid',
-    gridTemplateRows: 'auto 1fr'
+const useStyles = makeStyles((theme) => {
+  return {
+    toolbar: theme.mixins.toolbar,
+    globalContainer:{
+      height:'100%',
+      display: 'grid',
+      gridTemplateRows: 'auto 1fr'
+    }
   }
-}));
+});
 
 const Layout = ({ children }) => {
 

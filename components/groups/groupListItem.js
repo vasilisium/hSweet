@@ -15,7 +15,10 @@ const GroupListItem = (props) => {
 
   return (
     <ListItem button onClick={() => onSelect(obj)} 
-      onContextMenu={(e)=>onRightClick(e, obj)}
+      onContextMenu={(e)=>{
+        // console.log(obj)
+        onRightClick(e, obj)
+      }}
     >
       <ListItemText primary={name} />
       { selected ? 

@@ -24,7 +24,8 @@ const SensorsList = ({ getSensorsList, sensorsSate, selectedGroup }) => {
     <div>
       <div className={styles.listHeader}>
         <div className={`my-1 ${styles.labelWithIcon}`}>
-          <img src='object-group-regular.svg'/>
+          {/* <img src='object-group-regular.svg'/> */}
+          <span/>
           <label><h6> {selectedGroup?.name || '(not selected)'} </h6></label>
         </div>
 

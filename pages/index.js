@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import SensorsList from 'components/sensors/sensorsList';
 import SideHider from 'components/sideHider/sideHider';
-import GroupsList from 'components/groups/groupsList';
+// import GroupsList from 'components/groups/groupsList';
 
 import styles from './index.module.css';
 

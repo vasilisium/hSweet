@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
-export const useContxtMenu = ({rightClickHandler}) => {
+export const useContextMenu = () => {
   const contextMenuInitialState = { x: null, y: null };
   const [position, setPosition] = useState(contextMenuInitialState);
+
+  console.log(position)
 
   const onRightClick = (event, obj) => {
     event.preventDefault();
@@ -11,7 +13,9 @@ export const useContxtMenu = ({rightClickHandler}) => {
       y: event.clientY - 4,
     });
 
-    if(rightClickHandler) rightClickHandler(event, obj);
+    // console.log(obj)
+
+    // if(rightClickHandler) rightClickHandler(event, obj);
   };
 
   const contextMenuClose = () => {

@@ -1,36 +1,40 @@
-import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-// import { makeStyles } from '@material-ui/core/styles';
-
 import List from '@material-ui/core/List';
-// import Zoom from '@material-ui/core/Zoom';
-// import Fab from '@material-ui/core/Fab';
-// import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Menu from '@material-ui/core/Menu';
 
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import { fetchGroupsList, selectGroup_Action } from "redux/groups-Reducer";
 import Spinner from 'components/spinner';
 import GroupListItem from 'components/groups/groupListItem';
 import { IMenuItem } from './menuItem';
-import { Options } from './options'
+import { Options } from './options';
+import { ContextMenu } from 'components/connextMenu';
 
-// import { useBinaryState } from 'hooks/useBinaryState';
 // import CreateGroup from 'components/createGroup/createGroup';
 import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
-import { useContxtMenu } from 'hooks/useContxtMenu';
+import { useContextMenu } from 'hooks/useContextMenu';
+import { SlideInGroup } from 'components/slideInGroup';
 // import GroupIcon from './groupIcon';
 
-import styles from './groupsList.module.css';
+// import styles from './groupsList.module.css';
 
-// const useStyles = makeStyles((theme) => ({
-  
-// }));
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    height: '100%',
+  },
+
+  innerContainer: {
+    display: 'grid',
+    gridTemplateRows: '1fr auto',
+    height: '100%',
+  }
+}));
 
 const commonItems = [
   {
@@ -50,62 +54,68 @@ const objectiveItems = [
 ]
 
 const GroupsList = (props) => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
-  const { selectGroup, getGroupsList, groupsSate, showOptions } = props;
+  const { selectGroup, getGroupsList, groupsSate, showOptions = false } = props;
   const { loading, error, groupsList, initiated, selectedId } = groupsSate;
 
-  const { position, onRightClick, contextMenuClose } = useContxtMenu((e,o)=>console.log(o));
+  const { position, onRightClick, contextMenuClose } = useContextMenu();
+
+  console.log(position.y!==null)
 
   useEffect(() => {
     if (initiated === false) getGroupsList();
-    // setTimeout(() => setZoom(true), 500);
   }, [initiated])
 
-  return loading ? <Spinner /> :
-    error ? <h2> {error.toString()} </h2> :
-      (
-        <div className={styles.wrapper}>
+  return loading 
+    ? 
+      <Spinner /> 
+    : error 
+      ? <h2> {error.toString()} </h2> 
+      : (
+        <div className={classes.wrapper}>
           <KeyboardEventHandler
             handleKeys={['insert']}
             onKeyEvent={() => show()}
           />
-          <div className={styles.innerContainer}>
+          <div className={classes.innerContainer}>
             <List>
-              {groupsList && groupsList.map((group, i) => {
-                return <GroupListItem key={group.id}
-                  onRightClick={onRightClick}
-                  obj={group}
-                  {... (group.id === selectedId ? { selected: true } : {})}
-                  onSelect={(group) => {
-                    selectGroup(group.id)
-                  }}
-                />
-              })}
+              {groupsList &&
+                <SlideInGroup on interval={40} >
+                  {
+                    groupsList.map((group) => (
+                      <GroupListItem key={group.id}
+                        onRightClick={onRightClick}
+                        obj={group}
+                        {... (group.id === selectedId ? { selected: true } : {})}
+                        onSelect={(group) => {
+                          selectGroup(group.id)
+                        }}
+                      />
+                    ))
+                  }
+                </SlideInGroup>
+              }
             </List>
-            <Options delay={500}>
-              {
-                (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
-                .map((mi, index) => <IMenuItem {...mi} key={index} />)
-              }
-            </Options>
-            <Menu
-              keepMounted
-              open={position.y !== null}
-              onClose={contextMenuClose}
-              anchorReference="anchorPosition"
-              anchorPosition={
-                position.y !== null && position.x !== null
-                  ? { top: position.y, left: position.x }
-                  : undefined
-              }
+
+            {showOptions &&
+              <Options delay={500}>
+                {
+                  (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
+                    .map((mi, index) => <IMenuItem {...mi} key={index} />)
+                }
+              </Options>
+            }
+            <ContextMenu
+              openOn={position.y !== null}
+              closeCallback={contextMenuClose}
+              position={position}
             >
               {objectiveItems.map((mi, index) => <IMenuItem {...mi} key={index} />)}
-            </Menu> 
-            
-
-
+            </ContextMenu>
           </div>
+
+          
           {/* <div
             className={`btn btn-outline-secondary m-2 ${styles['my-btn']} ${styles.labelWithIcon}`}
             onClick={() => show()}
