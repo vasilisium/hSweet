@@ -5,7 +5,7 @@ import EditSharpIcon from '@material-ui/icons/EditSharp';
 
 import { fetchSensorsList } from 'redux/sensorsList-Reducer';
 import Sensor from 'components/sensors/sensor';
-import Spinner from 'components/spinner';
+import LoadingProgress from 'components/loadingProgress';
 
 import styles from './sensor.module.css';
 
@@ -17,7 +17,7 @@ const SensorsList = ({ getSensorsList, sensorsSate, selectedGroup }) => {
   }, [initiated])
 
   return sensorsSate.loading ? (
-    <Spinner />
+    <LoadingProgress />
   ) : sensorsSate.error ? (
     <h2>{sensorsSate.error.toString()}</h2>
   ) : (

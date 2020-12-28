@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 
 import Zoom from '@material-ui/core/Zoom';
 import Fab from '@material-ui/core/Fab';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Options = ({ delay, children }) => {
+export const Options = ({ delay, icon, children, defaultAction }) => {
   const classes = useStyles();
 
   const [initiated, setInitiated] = useState(false);
@@ -42,10 +41,15 @@ export const Options = ({ delay, children }) => {
         in={initiated}
       >
         <Fab color='primary' className={classes.fab} 
-          onClick={fabMenuState.show}
+          onClick={(e)=>defaultAction ? defaultAction(e) : fabMenuState.show(e)}
+          // {
+          //   if(defaultAction) {defaultAction(e)}
+          //   else {fabMenuState.show(e)}
+          // }
+          // }
           ref={fabRef}
         >
-          <MoreVertIcon />
+          { icon }
         </Fab>
       </Zoom>
 

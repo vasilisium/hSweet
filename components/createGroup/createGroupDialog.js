@@ -121,7 +121,6 @@ const CreateGroup = ({ formData, setFieldValue, resetForm, onCancle, onOk }) => 
           />
         </div>
         <div className={styles.formFooter}>
-          {/* <div /> */}
           <button className={`btn btn-success`} 
             disabled={!valid}
             onClick={(e) => (e.preventDefault(), okHandler(e))}

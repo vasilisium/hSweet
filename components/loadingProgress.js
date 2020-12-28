@@ -3,7 +3,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme.mixins.toolbar)
+  // console.log(theme.mixins.toolbar)
   return {
     progress: {
       position: 'absolute',
@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => {
   }
 });
 
-const LoadingSpinner = () => {
+const LoadingProgress = () => {
   const classes = useStyles()
   return (<>
     <LinearProgress className={classes.progress}/>
   </>)
 }
 
-export default LoadingSpinner
+export default LoadingProgress

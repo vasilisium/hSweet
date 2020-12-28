@@ -4,8 +4,6 @@ export const useContextMenu = () => {
   const contextMenuInitialState = { x: null, y: null };
   const [position, setPosition] = useState(contextMenuInitialState);
 
-  console.log(position)
-
   const onRightClick = (event, obj) => {
     event.preventDefault();
     setPosition({

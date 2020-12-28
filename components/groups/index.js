@@ -1,28 +1,27 @@
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
 
 import List from '@material-ui/core/List';
-
-import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import { fetchGroupsList, selectGroup_Action } from "redux/groups-Reducer";
-import Spinner from 'components/spinner';
+import LoadingProgress from 'components/loadingProgress';
 import GroupListItem from 'components/groups/groupListItem';
+import { commonItems,objectiveItems } from './menuEntries';
 import { IMenuItem } from './menuItem';
 import { Options } from './options';
 import { ContextMenu } from 'components/connextMenu';
+
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AddIcon from '@material-ui/icons/Add';
 
 // import CreateGroup from 'components/createGroup/createGroup';
 import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
 import { useContextMenu } from 'hooks/useContextMenu';
 import { SlideInGroup } from 'components/slideInGroup';
+import { select } from 'db/sensors';
 // import GroupIcon from './groupIcon';
-
-// import styles from './groupsList.module.css';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -36,40 +35,28 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const commonItems = [
-  {
-    icon: <AddIcon />,
-    label: 'New'
-  }
-]
-const objectiveItems = [
-  {
-    icon: <EditIcon />,
-    label: 'Rename'
-  },
-  {
-    icon: <BuildIcon />,
-    label: 'Modify'
-  }
-]
-
 const GroupsList = (props) => {
   const classes = useStyles();
+  const router = useRouter();
 
   const { selectGroup, getGroupsList, groupsSate, showOptions = false } = props;
   const { loading, error, groupsList, initiated, selectedId } = groupsSate;
 
-  const { position, onRightClick, contextMenuClose } = useContextMenu();
+  const selectedQuery = router.query?.selected
+  // if(selectedQuery && groupList.map(ge=>ge.id).includes(selectedQuery)) selectGroup(selectedQuery)
+  console.log(groupsList.filter(ge=>ge.id===selectedQuery)[0])
+  console.log(groupsList.map(ge=>ge.id).includes(selectedQuery))
 
-  console.log(position.y!==null)
+  const { position, onRightClick, contextMenuClose } = useContextMenu();
 
   useEffect(() => {
     if (initiated === false) getGroupsList();
+
   }, [initiated])
 
   return loading 
     ? 
-      <Spinner /> 
+      <LoadingProgress /> 
     : error 
       ? <h2> {error.toString()} </h2> 
       : (
@@ -90,6 +77,7 @@ const GroupsList = (props) => {
                         {... (group.id === selectedId ? { selected: true } : {})}
                         onSelect={(group) => {
                           selectGroup(group.id)
+                          router.push(`${router.pathname}/?selected=${group.id}`, undefined, { shallow: true })
                         }}
                       />
                     ))
@@ -99,7 +87,11 @@ const GroupsList = (props) => {
             </List>
 
             {showOptions &&
-              <Options delay={500}>
+              <Options 
+                delay={500} 
+                icon={ selectedId > 0 ? <MoreVertIcon/> : <AddIcon/> }
+                { ...(selectedId > 0 ? {} : { defaultAction: ()=>console.log('default') }) }
+              >
                 {
                   (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
                     .map((mi, index) => <IMenuItem {...mi} key={index} />)
