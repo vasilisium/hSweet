@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { fetchGroupsList, selectGroup_Action } from "redux/groups-Reducer";
 import LoadingProgress from 'components/loadingProgress';
 import GroupListItem from 'components/groups/groupListItem';
-import { commonItems,objectiveItems } from './menuEntries';
+import { commonItems, objectiveItems } from './menuEntries';
 import { IMenuItem } from './menuItem';
 import { Options } from './options';
 import { ContextMenu } from 'components/connextMenu';
@@ -17,10 +17,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 
 // import CreateGroup from 'components/createGroup/createGroup';
-import KeyboardEventHandler from 'components/keyboardEventHandler/KeyboardEventHandler';
 import { useContextMenu } from 'hooks/useContextMenu';
 import { SlideInGroup } from 'components/slideInGroup';
-import { select } from 'db/sensors';
 // import GroupIcon from './groupIcon';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,30 +39,31 @@ const GroupsList = (props) => {
 
   const { selectGroup, getGroupsList, groupsSate, showOptions = false } = props;
   const { loading, error, groupsList, initiated, selectedId } = groupsSate;
-
-  const selectedQuery = router.query?.selected
-  // if(selectedQuery && groupList.map(ge=>ge.id).includes(selectedQuery)) selectGroup(selectedQuery)
-  console.log(groupsList.filter(ge=>ge.id===selectedQuery)[0])
-  console.log(groupsList.map(ge=>ge.id).includes(selectedQuery))
-
   const { position, onRightClick, contextMenuClose } = useContextMenu();
+
+  const selectedQuery = + router.query?.selected;
+
+  const selectGroupHandler = (group) => {
+    selectGroup(group.id)
+    router.push(`${router.pathname}/?selected=${group.id}`, undefined, { shallow: true })
+  }
+
+  const menuClick = (action) => {
+    console.log(action)
+  }
 
   useEffect(() => {
     if (initiated === false) getGroupsList();
-
+    if (selectedQuery && groupsList.map(ge => ge.id).includes(selectedQuery)) selectGroup(selectedQuery)
   }, [initiated])
 
-  return loading 
-    ? 
-      <LoadingProgress /> 
-    : error 
-      ? <h2> {error.toString()} </h2> 
+  return loading
+    ?
+    <LoadingProgress />
+    : error
+      ? <h2> {error.toString()} </h2>
       : (
         <div className={classes.wrapper}>
-          <KeyboardEventHandler
-            handleKeys={['insert']}
-            onKeyEvent={() => show()}
-          />
           <div className={classes.innerContainer}>
             <List>
               {groupsList &&
@@ -75,10 +74,7 @@ const GroupsList = (props) => {
                         onRightClick={onRightClick}
                         obj={group}
                         {... (group.id === selectedId ? { selected: true } : {})}
-                        onSelect={(group) => {
-                          selectGroup(group.id)
-                          router.push(`${router.pathname}/?selected=${group.id}`, undefined, { shallow: true })
-                        }}
+                        onSelect={selectGroupHandler}
                       />
                     ))
                   }
@@ -87,10 +83,10 @@ const GroupsList = (props) => {
             </List>
 
             {showOptions &&
-              <Options 
-                delay={500} 
-                icon={ selectedId > 0 ? <MoreVertIcon/> : <AddIcon/> }
-                { ...(selectedId > 0 ? {} : { defaultAction: ()=>console.log('default') }) }
+              <Options
+                delay={500}
+                icon={selectedId > 0 ? <MoreVertIcon /> : <AddIcon />}
+                {...(selectedId > 0 ? {} : { defaultAction: () => console.log('default') })}
               >
                 {
                   (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
@@ -106,24 +102,6 @@ const GroupsList = (props) => {
               {objectiveItems.map((mi, index) => <IMenuItem {...mi} key={index} />)}
             </ContextMenu>
           </div>
-
-          
-          {/* <div
-            className={`btn btn-outline-secondary m-2 ${styles['my-btn']} ${styles.labelWithIcon}`}
-            onClick={() => show()}
-          >
-            <AddBoxSharpIcon />
-            <label>Create new group</label>
-          </div> */}
-
-          {/* <Modal
-            on={isShowing}
-            header='Create new group'
-            closeOnBackdropClick={false}
-            onClose={onModalClose}
-          >
-            <CreateGroup onCancle={() => onModalClose()} onOk={() => onModalClose(true)} />
-          </Modal> */}
         </div>
       )
 }

@@ -15,9 +15,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const IMenuItem = React.forwardRef((props, ref) => {
   const classes = useStyles();
-  const { label, icon } = props
+  const { label, icon, action } = props
   return (
-    <MenuItem className={classes.grid} innerRef={ref}>
+    <MenuItem className={classes.grid} innerRef={ref}
+      // onClick={}
+    >
       {icon}
       <span className={classes.label}>
         {label}

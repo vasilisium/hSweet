@@ -42,11 +42,6 @@ export const Options = ({ delay, icon, children, defaultAction }) => {
       >
         <Fab color='primary' className={classes.fab} 
           onClick={(e)=>defaultAction ? defaultAction(e) : fabMenuState.show(e)}
-          // {
-          //   if(defaultAction) {defaultAction(e)}
-          //   else {fabMenuState.show(e)}
-          // }
-          // }
           ref={fabRef}
         >
           { icon }
