@@ -19,17 +19,24 @@ console.log('dont foget to remove this dev option on prod')
 const pool = new Pool({ ...poolOptions, ...removeIt });
 //----------
 
-export const runQuery = (queryText) => new Promise((resolve) => {
+export const runQuery = (queryText) => new Promise((resolve, reject) => {
   pool.connect((con_err, client, done) => {
     if (con_err) {
+      if(con_err.code ==='ENOTFOUND') {
+        const msg = 'DB connection error. Server unreacheble.';
+        con_err.message = msg;
+        con_err.msg = msg;
+      }
+      // console.log(con_err.message)
       console.error(con_err);
-      resolve();
+      reject(con_err);
+      return
     }
     client.query(queryText, (q_err, res) => {
       done();
       if (q_err) {
         console.error(q_err);
-        resolve()
+        reject(q_err)
       } else {
         resolve(res)
       }

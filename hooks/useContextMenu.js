@@ -3,6 +3,7 @@ import { useState } from 'react';
 export const useContextMenu = () => {
   const contextMenuInitialState = { x: null, y: null };
   const [position, setPosition] = useState(contextMenuInitialState);
+  const [clickedObject, setObj] =useState(null);
 
   const onRightClick = (event, obj) => {
     event.preventDefault();
@@ -12,14 +13,14 @@ export const useContextMenu = () => {
     });
 
     // console.log(obj)
-
-    // if(rightClickHandler) rightClickHandler(event, obj);
+    setObj(obj);
   };
 
   const contextMenuClose = () => {
     setPosition(contextMenuInitialState);
+    setObj(null);
   };
 
 
-  return { position, onRightClick, contextMenuClose }
+  return { position, onRightClick, contextMenuClose, clickedObject }
 }

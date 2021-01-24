@@ -1,20 +1,20 @@
 import { createMuiTheme, withStyles } from '@material-ui/core/styles';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 
-// export const defaultTheme = createMuiTheme(
-//   {
+export const defaultTheme = createMuiTheme(
+  {
     // palette:{
     //   primary:{dark}
-    // }
+    // },
     // overrides:{
-    //   MuiButton:{
-    //     contained:{
-    //       backgroundColor: grey[800]
+    //   MuiTextField:{
+    //     root:{
+    //       borderStyle:'1px solid green'
     //     }
     //   }
     // }
-//   }
-// );
+  }
+);
 
 export const theme = (themeMode) => {
   const isDark = themeMode === 'dark';
@@ -36,16 +36,17 @@ export const theme = (themeMode) => {
     },
   }
 
+
   const darkOptions = {
-    palette: { 
-      type:'dark',
+    palette: {
+      type: 'dark',
       primary: {
         main: '#ff6e40',
       },
       secondary: {
         main: '#00838f',
       },
-      background: { paper: '#262626' } 
+      background: { paper: '#262626' }
     },
     overrides: {
       // MuiAppBar: {
@@ -65,13 +66,34 @@ export const theme = (themeMode) => {
     },
   }
 
-  return createMuiTheme(Object.assign(commonOptions, ...(isDark?[darkOptions]:[])))
+  return createMuiTheme(Object.assign(commonOptions, ...(isDark ? [darkOptions] : [])))
 };
 
-export const GlobalCss = withStyles({
-  '@global': {
-    // '.MuiButton-root': {
-    //   borderRadius: 0,
-    // },
-  },
+export const GlobalCss = withStyles(theme => {
+  // console.log(theme)
+  return {
+    '@global': {
+      '.MuiTextField-root': {
+        // root: {
+        // '& label.Mui-focused': {
+        //   color: 'green',
+        // },
+        // '& .MuiInput-underline:after': {
+        //   borderBottomColor: 'green',
+        // },
+        '& .MuiOutlinedInput-root': {
+          // '& fieldset': {
+          //   borderColor: 'black',
+          // },
+          // '&:hover fieldset': {
+          //   borderColor: theme.palette.text,
+          // },
+          // '&.Mui-focused fieldset': {
+          //   borderColor: theme.palette.primary
+          // },
+        },
+        // },
+      },
+    },
+  }
 })(() => null);

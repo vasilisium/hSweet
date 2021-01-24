@@ -16,30 +16,34 @@ const SensorsList = ({ getSensorsList, sensorsSate, selectedGroup }) => {
     if (initiated == false) getSensorsList();
   }, [initiated])
 
-  return sensorsSate.loading ? (
-    <LoadingProgress />
-  ) : sensorsSate.error ? (
-    <h2>{sensorsSate.error.toString()}</h2>
-  ) : (
-    <div>
-      <div className={styles.listHeader}>
-        <div className={`my-1 ${styles.labelWithIcon}`}>
-          {/* <img src='object-group-regular.svg'/> */}
-          <span/>
-          <label><h6> {selectedGroup?.name || '(not selected)'} </h6></label>
-        </div>
+  return sensorsSate.loading
+    ? <LoadingProgress />
+    : sensorsSate.error
+      ?
+      <>
+        <h1>{ sensorsSate.error.msg }</h1>
+        <pre>{ JSON.stringify(sensorsSate.error, null, 4) }</pre>
+      </>
+      : (
+        <div>
+          <div className={styles.listHeader}>
+            <div className={`my-1 ${styles.labelWithIcon}`}>
+              {/* <img src='object-group-regular.svg'/> */}
+              <span />
+              <label><h6> {selectedGroup?.name || '(not selected)'} </h6></label>
+            </div>
 
-        <div className={`btn btn-outline-secondary ${styles.asd}`}>
-            <EditSharpIcon/>
-        </div>
-      </div>
+            <div className={`btn btn-outline-secondary ${styles.asd}`}>
+              <EditSharpIcon />
+            </div>
+          </div>
 
-      <div className={`p-0 container-fluid ${styles.sensorsGrid}`}>
-        {sensorsList && sensorsList.map((s, i) => (
-          <Sensor obj={s} key={i} />
-        ))}
-      </div>
-    </div>
+          <div className={`p-0 container-fluid ${styles.sensorsGrid}`}>
+            {sensorsList && sensorsList.map((s, i) => (
+              <Sensor obj={s} key={i} />
+            ))}
+          </div>
+        </div>
       )
 }
 

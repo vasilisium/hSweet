@@ -1,4 +1,4 @@
-import { fetchApi } from 'functions/apiCallFunctions'
+import { fetchData } from 'functions/apiCallFunctions'
 
 export const initState = {
   sensorsList: [],
@@ -36,16 +36,15 @@ export const fetchSensorsList = () => {
   return (dispatch) => {
     dispatch(requestSensorsList_Action());
 
-    fetchApi(
-      urlPart,
-      (data) => {
-        dispatch(setSensorsList_Action(data))
+    fetchData(urlPart).then(result => {
+      if (result.isError) {
+        dispatch(requestError_Action(result.error))
+      }
+      else {
+        dispatch(setSensorsList_Action(result))
         dispatch(setIsInitiated_Action(true))
-      },
-      (error) => {
-        dispatch(requestError_Action(error))
-      },
-    )
+      }
+    })
   }
 }
 

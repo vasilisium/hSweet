@@ -1,6 +1,6 @@
 const Cors = require('cors');
 
-const apiRootAddress = `http://192.168.1.138:3000/api/`;
+const apiRootAddress = `http://localhost:3000/api/`;
 
 const defaultGetter = param => param;
 
@@ -13,7 +13,7 @@ export const endpoint = ({
   return async (req, res) => {
     if(isCallWithCors) await withCors(req, res);
 
-    return new Promise( resolve => {
+    return new Promise( (resolve, reject) => {
       const {
         query: { id },
       } = req;
@@ -26,7 +26,7 @@ export const endpoint = ({
         resolve();
       })
       .catch(err=> {
-        res.status(405).json(JSON.stringify(err, null, 2));
+        res.status(405).json(JSON.stringify({error:err, isError: true}, null, 2));
         resolve()
       })
     })
@@ -40,11 +40,9 @@ export const sendJSON = (res, data, statusCode=200) => {
     .end();
 };
 
-export const fetchApi = (urlPart, cbSucces, cbError) => {
-  fetch(apiRootAddress+urlPart)
-    .then(res=>res.json())
-    .then(j=>cbSucces(j))
-    .catch(e=>cbError(e))
+export const fetchData = async (urlPart,) => {
+  const promise = fetch(apiRootAddress+urlPart);
+  return await promise.then(res=>res.json())
 }
 
 export const  postData = (urlPart, dataObj, cbSucces, cbError) => {
