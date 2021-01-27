@@ -1,22 +1,20 @@
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography'
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useFormik } from 'formik';
-
 import { schema } from './createGroupSchema'
 
 import { setField_Action, resetForm_Action } from 'redux/formsData-Reducer';
-
+// import { fetchGroupsList } from 'redux/groups-Reducer';
 import { postData } from 'functions/apiCallFunctions';
 import { debounce } from 'functions/functions';
 
@@ -32,55 +30,85 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateGroup = ({ openOn, formData, setFieldValue, resetForm, onCancle, onOk, onClose }) => {
+const actions = {
+  create: 'CREATE',
+  modify: 'MODIFY',
+  delete: 'DELETE',
+}
 
-  const classes = useStyles();
+const defaultDialogProps = {
+  header: 'Create new group',
+  text: 'just some basics rules...',
+  action: actions.create,
+};
 
-  const getInput = (id) => document.getElementById(id);
-  const inputsData = () => ({
-    name: getInput('name')?.value,
-    description: getInput('description')?.value
-  });
-
-
-  const debouncedInputHandler = debounce((e) => { setFieldValue(e.target.id, e.target.value) }, 1000)
-  const inputChangeHandler = (e) => {
-    debouncedInputHandler(e)
-    // handleChange(e);
-    // console.log(validators.lengthValidator(e))
-  }
-  const okHandler = async (e) => {
-    let promise, result, noErrors = true;
+const createAction = async (values) => {
+  let promise, result
 
     try {
-      promise = postData(urlPart, inputsData());
+      promise = postData(urlPart, values);
       result = await promise.then(r => r.json())
 
     } catch (error) {
-      result = await promise.catch(e => e)
-      noErrors = false;
+      result = await promise.catch(err => err)
       console.log(error);
       console.log('-----------------------')
       console.log(result);
+
+      return false
+    }
+    return true;
+}
+
+const CreateGroup = ({ 
+  openOn,
+  formData,
+  onCancle,
+  onClose,
+  onOk,
+
+  setFieldValue,
+  resetForm,
+  // fetchGroups,
+  ...other
+}) => {
+  const classes = useStyles();
+
+  const formik = useFormik({
+    initialValues: formData ? formData : {
+      name: 'group6',
+      description:'The group 6',
+    },
+    validationSchema: schema,
+    onSubmit: (values) => {
+      okHandler(values)
+    },
+  });
+
+  const debouncedInputHandler = debounce((e) => { setFieldValue(e.target.id, e.target.value) }, 1000)
+  const inputChangeHandler = (e) => {
+    debouncedInputHandler(e);
+    formik.handleChange(e);
+  }
+  const okHandler = async (values) => {
+    let cb = createAction;
+    switch (other.action) {
+      case actions.modify:
+        cb = () => console.log('modify dialog action')
+        break;
     }
 
-    if (noErrors) {
-      resetForm(formType);
-      if (onOk) onOk(e);
+    if (await cb(values)){
+      onOk()
+      resetForm()
     }
+    else alert('ALARM!!!')
   }
   const cancleHandler = (e) => {
     resetForm(formType);
+    formik.resetForm();
     if (onCancle) onCancle(e)
   }
-
-  const formik = useFormik({
-    initialValues: formData,
-    validationSchema: schema,
-    onSubmit: () =>{
-      alert(JSON.stringify(inputsData(), null, 4))
-    }
-  })
 
   return (
 
@@ -89,10 +117,15 @@ const CreateGroup = ({ openOn, formData, setFieldValue, resetForm, onCancle, onO
       disableBackdropClick
       onEscapeKeyDown={onClose}
       aria-labelledby="dialog-title"
-    // onEntered={fillForm}
+      onClose={cancleHandler}
     >
-      <DialogTitle id="dialog-title">{'Create new group dialog'}</DialogTitle>
+      <DialogTitle id="dialog-title" onClose={cancleHandler}>
+        {other.header ? other.header : defaultDialogProps.header}
+      </DialogTitle>
       <DialogContent className={classes.form}>
+        <Typography variant='caption'>
+          {other.text ? other.text : defaultDialogProps.text}
+        </Typography>
         
         <TextField
           id="name"
@@ -101,21 +134,23 @@ const CreateGroup = ({ openOn, formData, setFieldValue, resetForm, onCancle, onO
           label="Group name"
           variant="outlined"
           onChange={inputChangeHandler}
-          defaultValue={formData ? formData['name'] : ''}
-          // value={formik.values.name}
-          onChange={formik.handleChange}
+          value={formik.values.name}
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
+          onBlur={()=>{
+            formik.setFieldTouched('name', true, true)
+          }}
         />
         <TextField
+          multiline
           id="description"
           name="description"
           label="Group description"
           variant="outlined"
           onChange={inputChangeHandler}
-          defaultValue={formData ? formData['description'] : ''}
-        // helperText="Text on error" //on error
-        // error //on error
+          value={formik.values.description}
+          error={formik.touched.description && Boolean(formik.errors.description)}
+          helperText={formik.touched.description && formik.errors.description}
         />
       </DialogContent>
       <DialogActions>
@@ -126,13 +161,13 @@ const CreateGroup = ({ openOn, formData, setFieldValue, resetForm, onCancle, onO
           Cancel
           </Button>
         <Button
-          // onClick={handleClose} 
           color="primary"
-          disabled
+          onClick={formik.handleSubmit}
           variant='contained'
+          disabled={!formik.isValid}
         >
           Ok
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )
@@ -142,6 +177,7 @@ const mapStateToProps = (state) => ({ formData: state.formsData.forms[formType] 
 const mapDispatchToProps = (dispatch) => ({
   setFieldValue: (fieldName, value) => dispatch(setField_Action(formType, fieldName, value)),
   resetForm: () => dispatch(resetForm_Action(formType)),
+  fetchGroups: () => dispatch(fetchGroupsList())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateGroup);

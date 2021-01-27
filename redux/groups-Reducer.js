@@ -51,17 +51,6 @@ export const fetchGroupsList = () => {
         dispatch(setIsInitiated_Action(true))
       }
     })
-
-    // fetchApi(
-    //   urlPart,
-    //   (data) => {
-    //     dispatch(setGroupsList_Action(data))
-    //     dispatch(setIsInitiated_Action(true))
-    //   },
-    //   (error) => {
-    //     dispatch(setError_Action(error))
-    //   },
-    // )
   }
 }
 

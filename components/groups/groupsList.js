@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
 
@@ -13,7 +13,7 @@ import LoadingProgress from 'components/loadingProgress';
 import GroupListItem from 'components/groups/groupListItem';
 import { commonItems, objectiveItems } from './menuEntries';
 import { IMenuItem } from './menuItem';
-import { Options } from './options';
+import { OptionsButton } from './optionsButton';
 import { ContextMenu } from 'components/connextMenu';
 import { useBinaryState } from 'hooks/useBinaryState';
 
@@ -43,7 +43,8 @@ const GroupsList = (props) => {
   const { loading, error, groupsList, initiated, selectedId } = groupsSate;
   const { position, onRightClick, contextMenuClose, clickedObject } = useContextMenu();
   const dialogState = useBinaryState(); //{ isShowing, toggle, show, hide }
-
+  
+  const [dialogProps, setDialogProps] = useState({});
   const selectedQuery = + router.query?.selected;
 
   const selectGroupHandler = (group) => {
@@ -69,8 +70,8 @@ const GroupsList = (props) => {
   }
   const renderMenuItem = (mi, key) => <IMenuItem {...mi} key={key} callback={menuClick} />
   const createGroup = () => {
-    // console.log('creating group')
     dialogState.show()
+
   }
   const renameGroup = (g) => {
     console.log('renaming group', g)
@@ -102,7 +103,6 @@ const GroupsList = (props) => {
                     groupsList.map((group) => (
                       <GroupListItem key={group.id}
                         onRightClick={(e, obj) => {
-                          // console.log(obj)
                           onRightClick(e, obj)
                         }}
                         obj={group}
@@ -116,7 +116,7 @@ const GroupsList = (props) => {
             </List>
 
             {showOptions &&
-              <Options
+              <OptionsButton
                 delay={500}
                 icon={selectedId > 0 ? <MoreVertIcon /> : <AddIcon />}
                 {...(selectedId > 0 ? {} : { defaultAction: createGroup })}
@@ -125,7 +125,7 @@ const GroupsList = (props) => {
                   (selectedId > 0 ? commonItems.concat(objectiveItems) : commonItems)
                     .map((mi, index) => renderMenuItem(mi, index))
                 }
-              </Options>
+              </OptionsButton>
             }
             <ContextMenu
               openOn={position.y !== null}
@@ -140,6 +140,11 @@ const GroupsList = (props) => {
             openOn={dialogState.isShowing}
             onCancle={dialogState.hide}
             onClose={dialogState.hide}
+            onOk={()=>{
+              getGroupsList();
+              dialogState.hide();
+            }}
+            {...dialogProps}
           />
         </div>
       )

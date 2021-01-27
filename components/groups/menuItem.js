@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: 'auto 1fr'
   },
   label: {
-    margin: '0 auto'
+    paddingLeft: '20px',
   }
 }));
 

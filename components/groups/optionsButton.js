@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Options = ({ delay, icon, children, defaultAction }) => {
+export const OptionsButton = ({ delay, icon, children, defaultAction }) => {
   const classes = useStyles();
 
   const [initiated, setInitiated] = useState(false);
@@ -53,11 +53,6 @@ export const Options = ({ delay, icon, children, defaultAction }) => {
         open={fabMenuState.isShowing}
         onClose={fabMenuState.hide}
         anchorEl={fabRef.current}
-        PaperProps={{
-          style: {
-            width: '150px',
-          },
-        }}
         getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
